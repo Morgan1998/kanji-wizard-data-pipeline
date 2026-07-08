@@ -20,5 +20,5 @@ export const getKanjiByLevel = (targetLevel) => {
     throw new Error(`Invalid JLPT level provided: ${targetLevel}`);
   }
 
-  return Object.values(rawData).filter(entry => entry.jlpt === level);
+  return Object.entries(rawData).filter(([kanji, data]) => data.jlpt === level);
 };
