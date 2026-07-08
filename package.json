@@ -1,0 +1,21 @@
+{
+  "name": "kanji-wizard-data-pipeline",
+  "version": "1.0.0",
+  "description": "* [jlpt_kanji_json_msgpack](https://github.com/Renairisu/jlpt_kanji_json_msgpack/blob/main/kanji_jlpt_only.json) - All kanji lists organized by jlpt level.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Morgan1998/kanji-wizard-data-pipeline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Morgan1998/kanji-wizard-data-pipeline/issues"
+  },
+  "homepage": "https://github.com/Morgan1998/kanji-wizard-data-pipeline#readme"
+}
