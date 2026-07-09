@@ -11,3 +11,8 @@ yarn-debug.log*
 
 # VS Code Extensions
 .qodo/
+
+# Data Output
+data/raw/kanji-list.json
+data/raw/n4-vocab.json
+data/raw/jmdict-eng-common-3.6.2.json
