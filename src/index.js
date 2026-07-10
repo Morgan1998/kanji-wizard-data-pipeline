@@ -14,16 +14,21 @@ const kanjiData = getKanjiByLevel(targetLevel);
 const vocabData = getVocabList(targetLevel);
 
 
-const dataset = Object.entries(kanjiData).map(([kanji, data]) => {
+
+const dataset = kanjiData.map(([kanjiCharacter, data]) => {
   return {
-    kanji,
+    kanji: kanjiCharacter,
     ...data,
-    associatedVocab: vocabData.filter(v => v.kanji === kanji)
+    associatedVocab: vocabData.filter(vocab => vocab.writtenForm.includes(kanjiCharacter))
   };
 });
 
+console.log(dataset[1]);
 
+
+/**
 console.log(`Pipeline complete! Found ${dataset.length} kanji.`);
-if (dataset.length > 0) {
+ if (dataset.length > 0) {
   console.log('Sample entry:', JSON.stringify(dataset[0], null, 2));
 }
+*/

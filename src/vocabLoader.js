@@ -3,23 +3,41 @@ import { join } from 'path';
 
 const currentDirectory = import.meta.dirname;
 
-/**
- * Loads and optionally filters vocabulary data.
- * @param {string} [level] - Optional: The JLPT level to filter by (e.g., 'n4')
- */
-export const getVocabList = (level = null) => {
-  const filePath = join(currentDirectory, '../data/raw/n4-vocab.json'); // Assume a master file
+export const getVocabList = () => {
+  const filePath = join(currentDirectory, '../data/raw/jmdict-eng-common-3.6.2.json');
   
   try {
     const rawData = JSON.parse(readFileSync(filePath, 'utf8'));
     
-    // If no level is provided, return everything. 
-    // If a level IS provided, filter it.
-    if (!level) return rawData;
-    
-    return rawData.filter(word => word.level.toLowerCase() === level.toLowerCase());
+    return rawData.words.flatMap((vocabularyEntry) => {
+      const commonKanjiForms = vocabularyEntry.kanji.filter(
+        (kanjiForm) => kanjiForm.common === true
+      );
+
+      if (commonKanjiForms.length === 0) {
+        return [];
+      }
+
+      return commonKanjiForms.map((kanjiForm) => {
+        const relevantReadings = vocabularyEntry.kana.filter((readingEntry) => {
+          return (
+            readingEntry.appliesToKanji.includes("*") || 
+            readingEntry.appliesToKanji.includes(kanjiForm.text)
+          );
+        });
+
+        return {
+          writtenForm: kanjiForm.text,
+          id: vocabularyEntry.id,
+          readings: relevantReadings.map((reading) => reading.text),
+          glosses: vocabularyEntry.sense.flatMap((sense) => 
+            sense.gloss.map((gloss) => gloss.text)
+          )
+        };
+      });
+    });
   } catch (error) {
-    console.error(`[ERROR] Failed to load vocabulary list: ${error.message}`);
+    console.error(`[ERROR] Failed to process JMDICT: ${error.message}`);
     return [];
   }
 };
