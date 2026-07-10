@@ -13,5 +13,7 @@ yarn-debug.log*
 .qodo/
 
 # Local raw data
-data/raw/kanji_jlpt_only.json
-data/raw/jmdict-eng-common-3.6.2.json
+data/raw
+
+# Local processed data
+data/processed

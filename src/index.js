@@ -1,5 +1,6 @@
 import { getKanjiByLevel } from './kanjiLoader.js';
 import { getVocabList } from './vocabLoader.js';
+import { saveDataset } from './writer.js';
 
 const targetLevel = process.argv[2];
 
@@ -23,7 +24,9 @@ const dataset = kanjiData.map(([kanjiCharacter, data]) => {
   };
 });
 
-console.log(dataset[1]);
+saveDataset(dataset, 'processed-kanji-data.json');
+
+
 
 
 /**
