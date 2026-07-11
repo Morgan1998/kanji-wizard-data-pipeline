@@ -1,6 +1,4 @@
-import { getKanjiByLevel } from './kanjiLoader.js';
-import { getVocabList } from './vocabLoader.js';
-import { saveDataset } from './writer.js';
+import { runPipeline } from './pipeline.js';
 
 const targetLevel = process.argv[2];
 
@@ -9,23 +7,10 @@ if (!targetLevel) {
   process.exit(1);
 }
 
-console.log(`--- Running Pipeline for ${targetLevel.toUpperCase()} ---`);
-
-const kanjiData = getKanjiByLevel(targetLevel);
-const vocabData = getVocabList(targetLevel);
-
-
-
-const dataset = kanjiData.map(([kanjiCharacter, data]) => {
-  return {
-    kanji: kanjiCharacter,
-    ...data,
-    associatedVocab: vocabData.filter(vocab => vocab.writtenForm.includes(kanjiCharacter))
-  };
+runPipeline(targetLevel).catch(err => {
+  console.error("Pipeline failed, shutting down.");
+  process.exit(1);
 });
-
-saveDataset(dataset, 'processed-kanji-data.json');
-
 
 
 
