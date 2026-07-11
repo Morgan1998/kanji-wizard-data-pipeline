@@ -7,10 +7,7 @@ if (!targetLevel) {
   process.exit(1);
 }
 
-runPipeline(targetLevel).catch(err => {
-  console.error("Pipeline failed, shutting down.");
-  process.exit(1);
-});
+runPipeline(targetLevel);
 
 
 

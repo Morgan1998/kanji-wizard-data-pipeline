@@ -2,7 +2,7 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 
 export const saveDataset = (data, filename) => {
-  const outputDirectory = join(import.meta.dirname, '../data/processed');
+  const outputDirectory = join(import.meta.dirname, '../../data/processed');
 
   // Ensure the directory exists
   if (!existsSync(outputDirectory)) {

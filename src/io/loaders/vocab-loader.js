@@ -4,7 +4,7 @@ import { join } from 'path';
 const currentDirectory = import.meta.dirname;
 
 export const getVocabList = () => {
-  const filePath = join(currentDirectory, '../data/raw/jmdict-eng-common-3.6.2.json');
+  const filePath = join(currentDirectory, '../../../data/raw/jmdict-eng-common-3.6.2.json');
   
   try {
     const rawData = JSON.parse(readFileSync(filePath, 'utf8'));
