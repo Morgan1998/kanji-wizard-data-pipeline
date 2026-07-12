@@ -18,3 +18,9 @@ This project strictly adheres to the open-source licenses of the following found
 * **Direct Source:** [Bluskyo/JLPT_Vocabulary](https://github.com/Bluskyo/JLPT_Vocabulary/releases) (Structured JSON/CSV word lists with JLPT classification)
 * **Upstream Creator:** Jonathan Waller via [Tanos JLPT Word Lists](https://tanos.co.uk)
 * **License:** [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org)
+
+#### 4. Vocabulary Frequency Dataset **For Anki Deck Generation**
+* **Data Source:** [JPDB.io](https://jpdb.io) (Original corpus/frequency data)
+* **Format & Infrastructure:** Maintained by [MarvNC](https://github.com/MarvNC/yomitan-dictionaries) via the Yomitan Dictionaries ecosystem.
+* **Direct Repository:** [Kuuuube / yomitan-dictionaries](https://github.com/Kuuuube/yomitan-dictionaries) (Mirror/Collection)
+* **License/Usage:** Data derived from JPDB.io. This project utilizes the dataset for personal educational and portfolio purposes. Please note that this data is subject to the terms of the original platform and is intended for non-commercial use.

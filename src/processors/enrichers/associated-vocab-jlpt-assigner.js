@@ -1,6 +1,6 @@
-export function assignJlptLevelToAssociatedVocab(kanjiWithVocabList, jlptMap) {
-  return kanjiWithVocabList.map(function(kanjiWithVocabEntry) {
-    const enrichedVocab = kanjiWithVocabEntry.associatedVocab.map(function(vocabEntry) {
+export function assignJlptLevelToVocab(kanjiWithVocabList, jlptMap) {
+  return kanjiWithVocabList.map(kanjiWithVocabEntry => {
+    const enrichedVocab = kanjiWithVocabEntry.associatedVocab.map(vocabEntry => {
       const level = jlptMap.get(vocabEntry.writtenForm);
 
       return {
