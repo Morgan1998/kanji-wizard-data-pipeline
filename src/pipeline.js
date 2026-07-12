@@ -1,40 +1,50 @@
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
 import { getKanjiByLevel } from './io/loaders/kanji-loader.js';
 import { getVocabList } from './io/loaders/vocab-loader.js';
-import { getTokenizer } from './services/morphology.js';
-import { tokenizeVocabList } from './processors/tokenizers/vocab-list-tokenizer.js';
-import { filterByJlpt } from './processors/filterers/jlpt-filterer.js';
-import { filterByFrequency } from './processors/filterers/frequency-filterer.js';
-import { saveDataset } from './io/writer.js';
+import { assignAssociatedVocab } from './processors/enrichers/kanji-associated-vocab-assigner.js';
+import { createJlptMap } from './processors/enrichers/associated-vocab-jlpt-map-loader.js';
+import { assignJlptLevelToAssociatedVocab } from './processors/enrichers/associated-vocab-jlpt-assigner.js';
+import { tokenizeVocab } from './processors/tokenizers/vocab-tokenizer.js';
+import { saveKanjiwithVocabList } from './io/writer.js';
 
-export async function runPipeline(targetLevel, options = {}) {
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT_DIR = join(__dirname, '..');
+
+
+
+const SOURCES = {
+  kanjiSource: 'kanji_jlpt_only.json',
+  vocabMainDictionarySource: 'jmdict-eng-common-3.6.2.json',
+  vocabJlptSource: 'JLPT_vocab_ALL.json',
+}
+
+const PATHS = {
+  kanjiSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.kanjiSource),
+  vocabMainDictionarySourcePath: join(ROOT_DIR, 'data/raw', SOURCES.vocabMainDictionarySource),
+  vocabJlptSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.vocabJlptSource),
+  outputDirectory: join(ROOT_DIR, 'data/processed')
+};
+
+export async function runPipeline(targetLevels, options = {}) {
   try {
-    const tokenizer = await getTokenizer();
-    const kanjiList = getKanjiByLevel(targetLevel);
+    const targetLevelsArray = Array.isArray(targetLevels) ? targetLevels : [targetLevels];
+    const kanjiList = getKanjiByLevel(targetLevelsArray);
+    const vocabularyList = getVocabList(PATHS.vocabMainDictionarySourcePath); 
     
-    let vocabularyList = getVocabList(); 
+    let kanjiWithVocabList = assignAssociatedVocab(kanjiList, vocabularyList);
 
-    if (options.filterByJlpt) {
-      vocabularyList = filterByJlpt(vocabularyList, targetLevel);
-    }
-    
-    if (options.filterByFrequency) {
-      vocabularyList = filterByFrequency(vocabularyList, options.minFrequency);
-    }
-    
-    vocabularyList = tokenizeVocabList(vocabularyList, tokenizer);
+    const vocabJlptMap = createJlptMap(PATHS.vocabJlptSourcePath);
+    kanjiWithVocabList = assignJlptLevelToAssociatedVocab(kanjiWithVocabList, vocabJlptMap);
 
-    const dataset = kanjiList.map(([kanjiCharacter, kanjiMetadata]) => ({
-      kanji: kanjiCharacter,
-      ...kanjiMetadata,
-      associatedVocab: vocabularyList.filter(vocab => 
-        vocab.writtenForm.includes(kanjiCharacter)
-      )
-    }));
 
-    const fileName = `${targetLevel}-kanji-with-vocab.json`;
-    saveDataset(dataset, fileName);
+    const sortedLevels = [...targetLevelsArray].sort();
+    const levelsString = sortedLevels.join('-');
+    const fileName = `${levelsString}-kanji-with-vocab.json`;
+    saveKanjiwithVocabList(kanjiWithVocabList, fileName, PATHS.outputDirectory);
     
-    console.log(`Pipeline complete! Saved ${dataset.length} items.`);
+    console.log(`Pipeline complete! Saved ${kanjiWithVocabList.length} items.`);
   } catch (error) {
     console.error("Pipeline failure:", error);
     process.exit(1);

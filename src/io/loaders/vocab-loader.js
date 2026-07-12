@@ -1,10 +1,7 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
 
-const currentDirectory = import.meta.dirname;
 
-export const getVocabList = () => {
-  const filePath = join(currentDirectory, '../../../data/raw/jmdict-eng-common-3.6.2.json');
+export const getVocabList = (filePath) => {
   
   try {
     const rawData = JSON.parse(readFileSync(filePath, 'utf8'));

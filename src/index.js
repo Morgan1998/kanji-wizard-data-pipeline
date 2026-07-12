@@ -1,19 +1,18 @@
+import { parseArgs } from './utils/cli-parser.js';
 import { runPipeline } from './pipeline.js';
 
-const targetLevel = process.argv[2];
+const args = parseArgs(process.argv.slice(2));
 
-if (!targetLevel) {
-  console.error("Usage: node src/index.js <level> (e.g., n4)");
-  process.exit(1);
+let targetLevels = args.levels || ['n5', 'n4', 'n3', 'n2', 'n1'];
+
+const VALID_LEVELS = ['n5', 'n4', 'n3', 'n2', 'n1'];
+
+const invalidLevels = targetLevels.filter(level => !VALID_LEVELS.includes(level));
+
+if (invalidLevels.length > 0) {
+  console.error(`Error: Invalid JLPT level(s) provided: ${invalidLevels.join(', ')}`);
+  console.error(`Accepted values are: ${VALID_LEVELS.join(', ')}`);
+  process.exit(1); 
 }
 
-runPipeline(targetLevel);
-
-
-
-/**
-console.log(`Pipeline complete! Found ${dataset.length} kanji.`);
- if (dataset.length > 0) {
-  console.log('Sample entry:', JSON.stringify(dataset[0], null, 2));
-}
-*/
+await runPipeline(targetLevels);
