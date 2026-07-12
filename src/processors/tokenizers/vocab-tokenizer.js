@@ -1,35 +1,40 @@
 import { convertKatakanaToHiragana } from '../../utils/kana-utils.js';
 import { getTokenizer } from '../../services/morphology.js';
 
-export async function tokenizeVocab(kanjiList) {
+export async function tokenizeVocab(kanjiWithVocabList) {
   const tokenizer = await getTokenizer();
 
-  return kanjiList.map(vocabEntry => {
-    console.log(vocabEntry.writtenForm);
-    if (!vocabEntry.writtenForm || typeof vocabEntry.writtenForm !== 'string') {
-      return { ...vocabEntry, useTokenToggle: false, tokens: [] };
-    }
+  return kanjiWithVocabList.map(kanjiWithVocabEntry => {
+    const enrichedVocab = kanjiWithVocabEntry.associatedVocab.map(vocabEntry => {
+      const tokens = tokenizer.tokenize(vocabEntry.writtenForm) || [];
 
-    const tokens = tokenizer.tokenize(vocabEntry.writtenForm) || [];
+      const normalizedTokenReading = convertKatakanaToHiragana(
+        tokens.map(token => token.reading || '').join('').toLowerCase()
+      ).replace(/[\u30fc]/g, '');
 
-    const normalizedTokenReading = convertKatakanaToHiragana(
-      tokens.map(token => token.reading || '').join('').toLowerCase()
-    ).replace(/[\u30fc]/g, '');
+      if (!vocabEntry.readings) {
+        console.warn('Missing readings for:', vocabEntry.kanji);
+      }
 
-    const matchesDictionary = vocabEntry.readings.some(reading => 
-      reading.replace(/[\u30fc]/g, '') === normalizedTokenReading
-    );
+      const matchesDictionary = vocabEntry.readings.some(reading => 
+        reading.replace(/[\u30fc]/g, '') === normalizedTokenReading
+      );
 
+      const useTokenToggle = tokens.length > 1 && matchesDictionary;
 
-    const useTokenToggle = tokens.length > 1 && matchesDictionary;
-
+      return {
+        ...vocabEntry,
+        useTokenToggle,
+        tokens: tokens.map(token => ({
+          surface: token.surface_form,
+          reading: useTokenToggle ? token.reading : ''
+        }))
+      };
+    });
+    
     return {
-      ...vocabEntry,
-      useTokenToggle,
-      tokens: tokens.map(token => ({
-        surface: token.surface_form,
-        reading: useTokenToggle ? token.reading : ""
-      }))
+      ...kanjiWithVocabEntry,
+      associatedVocab: enrichedVocab,
     };
   });
 }

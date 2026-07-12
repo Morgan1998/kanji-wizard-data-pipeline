@@ -45,6 +45,8 @@ export async function runPipeline(targetLevels, options = {}) {
     const vocabFrequencyMap =createFrequencyMap(PATHS.vocabFrequencySourcePath);
     kanjiWithVocabList = assignFrequencyToVocab(kanjiWithVocabList, vocabFrequencyMap);
 
+    kanjiWithVocabList = await tokenizeVocab(kanjiWithVocabList);
+
 
     const sortedLevels = [...targetLevelsArray].sort();
     const levelsString = sortedLevels.join('-');
