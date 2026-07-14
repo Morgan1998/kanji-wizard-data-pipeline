@@ -9,7 +9,9 @@ import { assignJlptLevelToVocab } from './processors/enrichers/associated-vocab-
 import { createFrequencyMap } from './io/loaders/associated-vocab-frequency-map-loader.js';
 import { assignFrequencyToVocab } from './processors/enrichers/associated-vocab-frequency-assigner.js';
 import { tokenizeVocab } from './processors/tokenizers/vocab-tokenizer.js';
+import { filterAndSortVocab } from './processors/filterers/vocab-filterer.js';
 import { saveKanjiwithVocabList } from './io/writer.js';
+import { buildTsv } from './build-tsv.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -28,12 +30,13 @@ const PATHS = {
   vocabMainDictionarySourcePath: join(ROOT_DIR, 'data/raw', SOURCES.vocabMainDictionarySource),
   vocabJlptSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.vocabJlptSource),
   vocabFrequencySourcePath: join(ROOT_DIR, 'data/raw', SOURCES.vocabFrequencySource),
-  outputDirectory: join(ROOT_DIR, 'data/processed')
+  jsonOutputDirectory: join(ROOT_DIR, 'data/processed/json'),
+  tsvOutputDirectory: join(ROOT_DIR, 'data/processed/tsv'),
 };
 
-export async function runPipeline(targetLevels, options = {}) {
+export async function runPipeline(options) {
   try {
-    const targetLevelsArray = Array.isArray(targetLevels) ? targetLevels : [targetLevels];
+    const targetLevelsArray = Array.isArray(options.targetLevels) ? options.targetLevels : [options.targetLevels];
     const kanjiList = getKanjiByLevel(targetLevelsArray);
     const vocabularyList = getVocabList(PATHS.vocabMainDictionarySourcePath); 
     
@@ -47,11 +50,17 @@ export async function runPipeline(targetLevels, options = {}) {
 
     kanjiWithVocabList = await tokenizeVocab(kanjiWithVocabList);
 
+    kanjiWithVocabList = filterAndSortVocab(kanjiWithVocabList, options.maxVocab);
+
 
     const sortedLevels = [...targetLevelsArray].sort();
     const levelsString = sortedLevels.join('-');
     const fileName = `${levelsString}-kanji-with-vocab.json`;
-    saveKanjiwithVocabList(kanjiWithVocabList, fileName, PATHS.outputDirectory);
+    saveKanjiwithVocabList(kanjiWithVocabList, fileName, PATHS.jsonOutputDirectory);
+    const jsonDataOutputPath = `${PATHS.jsonOutputDirectory}/${fileName}`;
+    if (options.buildTsv === true) {
+      buildTsv(jsonDataOutputPath, PATHS.tsvOutputDirectory);
+    }
     
     console.log(`Pipeline complete! Saved ${kanjiWithVocabList.length} items.`);
   } catch (error) {

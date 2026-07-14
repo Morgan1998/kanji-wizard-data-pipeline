@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 
-function buildTsv() {
+export function buildTsv(jsonDataPath, tsvOutputDirectory) {
     try {
-        const rawData = readFileSync('./data/processed/n5-kanji-with-vocab.json', 'utf8');
+        const rawData = readFileSync(jsonDataPath, 'utf8');
         const kanjiList = JSON.parse(rawData);
 
         const level = kanjiList[0]?.jlpt || 'unknown'; 
@@ -14,7 +14,7 @@ function buildTsv() {
             return `${item.kanji}\t${jsonBlob}`;
         });
 
-        const outputDir = './data/processed/tsv';
+        const outputDir = tsvOutputDirectory;
         const outputPath = join(outputDir, filename);
         
         mkdirSync(outputDir, { recursive: true });
@@ -27,5 +27,3 @@ function buildTsv() {
         console.error('Pipeline Error:', err);
     }
 }
-
-buildTsv();
