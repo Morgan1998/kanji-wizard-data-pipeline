@@ -4,6 +4,7 @@
   "description": "* [jlpt_kanji_json_msgpack](https://github.com/Renairisu/jlpt_kanji_json_msgpack/blob/main/kanji_jlpt_only.json) - All kanji lists organized by jlpt level.",
   "main": "src/index.js",
   "scripts": {
+    "start": "node src/pipeline.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node scripts/download-data.js"
   },
@@ -21,7 +22,12 @@
   "homepage": "https://github.com/Morgan1998/kanji-wizard-data-pipeline#readme",
   "dependencies": {
     "adm-zip": "^0.5.18",
+    "commander": "^15.0.0",
+    "fast-xml-parser": "^5.10.0",
     "kuromoji": "^0.1.2",
     "mkdirp": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^10.7.0"
   }
 }
