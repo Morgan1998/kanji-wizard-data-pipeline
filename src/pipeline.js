@@ -1,17 +1,13 @@
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { program } from "commander";
 
-import { getKanjiByLevel } from './io/loaders/kanji-loader.js';
-import { getVocabList } from './io/loaders/vocab-loader.js';
-import { assignAssociatedVocab } from './processors/enrichers/kanji-associated-vocab-assigner.js';
-import { createJlptMap } from './io/loaders/associated-vocab-jlpt-map-loader.js';
-import { assignJlptLevelToVocab } from './processors/enrichers/associated-vocab-jlpt-assigner.js';
-import { createFrequencyMap } from './io/loaders/associated-vocab-frequency-map-loader.js';
-import { assignFrequencyToVocab } from './processors/enrichers/associated-vocab-frequency-assigner.js';
-import { tokenizeVocab } from './processors/tokenizers/vocab-tokenizer.js';
-import { filterAndSortVocab } from './processors/filterers/vocab-filterer.js';
-import { saveKanjiwithVocabList } from './io/writer.js';
-import { buildTsv } from './build-tsv.js';
+import { readRawFile } from "#extract/disk-reader";
+import { parseJsonToObject } from "#parse/json-parser";
+
+
+
+
+
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, '..');

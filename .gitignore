@@ -12,8 +12,5 @@ yarn-debug.log*
 # VS Code Extensions
 .qodo/
 
-# Local raw data
-data/raw
-
-# Local processed data
-data/processed
+# Raw data and ouputted data
+data

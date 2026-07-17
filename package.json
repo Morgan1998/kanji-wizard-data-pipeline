@@ -2,11 +2,11 @@
   "name": "kanji-wizard-data-pipeline",
   "version": "1.0.0",
   "description": "* [jlpt_kanji_json_msgpack](https://github.com/Renairisu/jlpt_kanji_json_msgpack/blob/main/kanji_jlpt_only.json) - All kanji lists organized by jlpt level.",
-  "main": "src/index.js",
+  "main": "src/pipeline.js",
   "scripts": {
     "start": "node src/pipeline.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node scripts/download-data.js"
+    "postinstall": "node scripts/postinstall-initialization.js"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,17 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "imports": {
+    "#raw/*": "./data/raw/*",
+    "#extract/*": "./src/extract/*.js",
+    "#parse/*": "./src/parse/*.js",
+    "#transform/*": "./src/transform/*.js",
+    "#enrichers/*": "./src/transform/enrichers/*.js",
+    "#tokenizers/*": "./src/transform/encrichers/tokenizers/*.js",
+    "#filterers/*": "./src/transform/filterers/*.js",
+    "#mappers/*": "./src/transform/mappers/*.js",
+    "#load/*": "./src/load/*.js"
+  },
   "bugs": {
     "url": "https://github.com/Morgan1998/kanji-wizard-data-pipeline/issues"
   },

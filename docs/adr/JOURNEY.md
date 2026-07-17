@@ -1,28 +1,3 @@
-# 🚀 Project Journey & Developer Log
-
-## 📌 Quick Status
-- **Current Focus:** 
-- **Last Updated:** 2026-07-11
-
----
-
-## 📝 Active TODOs
-- [ ] **High Priority:** 
-- [ ] **Medium Priority:** 
-- [ ] **Low Priority:** 
-
----
-
-## 🪵 Daily Log & Insights
-
-### 📅 [YYYY-MM-DD] - [Brief Title, e.g., The Database Nightmare]
-*   **What I Worked On:** [Briefly describe the focus of the session]
-*   **Key Notes:**
-    *   [Insight or concept you learned today]
-    *   [Architecture decision notes]
-
----
-
 ## 🪲 Issue Tracker
 
 ### 🔴 [ISSUE-001] Need to figure out a way to accurately assign each kanji of a word to its piece of the furigana of that word

@@ -1,5 +1,5 @@
-import { convertKatakanaToHiragana } from '../../utils/kana-utils.js';
-import { getTokenizer } from '../../services/morphology.js';
+import { convertKatakanaToHiragana } from '../../../utils/kana-utils.js';
+import { getTokenizer } from './japanese-tokenizer.js';
 
 export async function tokenizeVocab(kanjiWithVocabList) {
   const tokenizer = await getTokenizer();
