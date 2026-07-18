@@ -2,6 +2,7 @@ import { program } from "commander";
 
 import { readRawFile } from "#extract/disk-reader";
 import { parseJsonToObject } from "#parse/json-parser";
+import { parseXmlToObject } from "#parse/xml-parser";
 
 
 
