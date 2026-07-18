@@ -5,7 +5,7 @@ A Node.js data pipeline that extracts, transforms, and loads Japanese lexical da
 ## Why? 
 
 The `Kanji Wizard` project needed a way to source validated, structured, and scalable kanji data to plug into its core engine. Many kanji decks on Anki 
-utilize arbitrary vocabulary selection for kanji in kanji decks. This pipeline aims to allow the creation of high quality datasets that can instantly be plugged into
+utilize arbitrary vocabulary selection for kanji. This pipeline aims to allow the creation of high quality datasets that can instantly be plugged into
 the Kanji Wizard engine for new deck creation. It will also allow for creation of unique decks that fit the interest/needs of the user. Unique deck factors include: filtering kanji sets or associated vocab by JLPT level, vocab frequency ratings relative to the applied corpus, and various combinations of JLPT level kanji sets. 
 
 ## Technical Stack and Architectural Strategies

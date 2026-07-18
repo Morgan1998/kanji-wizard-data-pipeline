@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 
-export async function readRawFile(filepath) {
+export async function readRawFile(filePath) {
     if (!filePath) {
         throw new Error('[Extractor Error] A valid file path parameter must be specified');
     }

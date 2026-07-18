@@ -5,7 +5,8 @@
   "main": "src/pipeline.js",
   "scripts": {
     "start": "node src/pipeline.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test src/**/*.test.js",
+    "test:watch": "node --test --watch src/**/*.test.js",
     "postinstall": "node scripts/postinstall-initialization.js"
   },
   "repository": {
@@ -25,7 +26,8 @@
     "#tokenizers/*": "./src/transform/encrichers/tokenizers/*.js",
     "#filterers/*": "./src/transform/filterers/*.js",
     "#mappers/*": "./src/transform/mappers/*.js",
-    "#load/*": "./src/load/*.js"
+    "#load/*": "./src/load/*.js",
+    "#config/*": "./config/*.js"
   },
   "bugs": {
     "url": "https://github.com/Morgan1998/kanji-wizard-data-pipeline/issues"

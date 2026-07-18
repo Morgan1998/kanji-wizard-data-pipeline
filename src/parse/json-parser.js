@@ -4,7 +4,7 @@ export function parseJsonToObject(rawJsonString) {
     }
 
     try {
-        parsedData = JSON.parse(rawJsonString);
+        const parsedData = JSON.parse(rawJsonString);
         return parsedData;
     } catch (error) {
         throw new Error(`[Parser Failure] Target string is not valid JSON. Structural violation: ${error.message}`);
