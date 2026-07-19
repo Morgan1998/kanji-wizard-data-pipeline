@@ -1,7 +1,7 @@
 
-export function filterPluckedWordsArray(mainDictPluckedWordsArray) {
-  return mainDictPluckedWordsArray.words.flatMap((vocabularyEntry) => {
-    const commonKanjiForms = vocabularyEntry.kanji.filter(
+export function filterPluckedWords(pluckedWords) {
+  return pluckedWords.flatMap((word) => {
+    const commonKanjiForms = word.kanji.filter(
       (kanjiForm) => kanjiForm.common === true
     );
 
@@ -10,7 +10,7 @@ export function filterPluckedWordsArray(mainDictPluckedWordsArray) {
     }
 
     return commonKanjiForms.map((kanjiForm) => {
-      const relevantReadings = vocabularyEntry.kana.filter((readingEntry) => {
+      const relevantReadings = word.kana.filter((readingEntry) => {
         return (
           readingEntry.appliesToKanji.includes("*") || 
           readingEntry.appliesToKanji.includes(kanjiForm.text)
@@ -19,9 +19,9 @@ export function filterPluckedWordsArray(mainDictPluckedWordsArray) {
 
       return {
         writtenForm: kanjiForm.text,
-        id: vocabularyEntry.id,
+        id: word.id,
         readings: relevantReadings.map((reading) => reading.text),
-        glosses: vocabularyEntry.sense.flatMap((sense) => 
+        glosses: word.sense.flatMap((sense) => 
           sense.gloss.map((gloss) => gloss.text)
         )
       };

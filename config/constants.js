@@ -20,4 +20,4 @@ export const PATHS = {
   tsvOutputDirectory: join(ROOT_DIR, 'data/processed/tsv'),
 };
 
-export const SUPPORTED_LEVELS = ['n1', 'n2', 'n3', 'n4', 'n5'];
+export const SUPPORTED_LEVELS = [1, 2, 3, 4, 5];

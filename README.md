@@ -63,10 +63,10 @@ This project strictly adheres to the open-source licenses of the following found
 ### Phase 2: Setup Core architecture
 - [x] **Implement a simple ETL file structure:** Use ETL (Extract, Transform, Load) to organize the core modules of the project.
 - [x] **Utilize Subpath Imports :** Switch from barrel imports to subpath imports to eliminate risk of circular dependency and only execute the exact modules needed for a given operation. 
-- [] **Refactor to use promise-based APIs :** Make use of promise-based APIs to enforce non-blocking asynchronous execution. 
+- [x] **Refactor to use promise-based APIs :** Make use of promise-based APIs to enforce non-blocking asynchronous execution. 
 
 ### Phase 3: Interface
-- [ ] **Command Line Interface (CLI):** Implement the `Commander` package to allow passing in of process arguments for dynamic dataset creation. 
+- [x] **Command Line Interface (CLI):** Implement the `Commander` package to allow passing in of process arguments for dynamic dataset creation. 
 
 ### Phase 4: Testing
-- [] **Implement testing:** Write clean tests for each major module.
+- [x] **Implement testing:** Write clean tests for each major module.

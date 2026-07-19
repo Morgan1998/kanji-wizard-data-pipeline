@@ -5,8 +5,8 @@
   "main": "src/pipeline.js",
   "scripts": {
     "start": "node src/pipeline.js",
-    "test": "node --test src/**/*.test.js",
-    "test:watch": "node --test --watch src/**/*.test.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
     "postinstall": "node scripts/postinstall-initialization.js"
   },
   "repository": {
