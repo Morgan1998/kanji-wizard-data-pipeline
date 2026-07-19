@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
-import { enrichWithAssociatedWords } from './associated-words-enricher.js';
+import { enrichWithAssociatedWords } from './kanji-words-enricher.js';
 
 test('enrichWithAssociatedWords should attach matching words to the correct kanji', () => {
     const mockMainDataSet = [

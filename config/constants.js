@@ -12,6 +12,7 @@ export const SOURCES = {
 };
 
 export const PATHS = {
+  rawDataDirectoryPath: join(ROOT_DIR, 'data/raw'),
   kanjiDataSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.kanjiDataSource),
   mainDictionarySourcePath: join(ROOT_DIR, 'data/raw', SOURCES.mainDictionarySource),
   wordsJlptSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.wordsJlptSource),

@@ -11,7 +11,7 @@ import { filterByLevel } from "#transform/filterers/kanji-data-array-jlpt-filter
 import { pluckWords } from "#transform/selectors/main-dictionary-words-plucker";
 import { filterPluckedWords } from "#transform/filterers/plucked-words-filterer";
 import { buildWordsMap } from "#transform/mappers/words-mapper";
-import { enrichWithAssociatedWords } from "#transform/enrichers/associated-words-enricher";
+import { enrichWithAssociatedWords } from "#transform/enrichers/kanji-words-enricher";
 
 import { buildWordsJlptMap } from "#transform/mappers/words-jlpt-mapper";
 import { enrichWordsWithJlpt } from "#transform/enrichers/words-jlpt-enricher";
@@ -22,6 +22,10 @@ import { enrichWordsWithFrequency } from "#transform/enrichers/words-frequency-e
 import { filterWordsWithoutFrequency } from '#transform/filterers/words-without-frequency-filterer';
 import { sortWordsByFrequency } from "#transform/sorters/words-sorter-by-frequency";
 import { maxOutWords } from '#transform/filterers/words-maxer';
+import { enrichWithReadingType } from "#transform/enrichers/words-reading-type-enricher";
+import { replaceReadingTypes } from "#transform/replacers/reading-type-replacer";
+
+import { reportMissingReadingTypes } from "#load/pipeline-reporter";
 
 import { saveToJson } from "#load/json-writer";
 
@@ -95,19 +99,19 @@ async function runPipeline() {
     
 
     mainDataSet = filterWordsWithoutFrequency(mainDataSet);
-    //console.log(mainDataSet);
     mainDataSet = sortWordsByFrequency(mainDataSet);
     mainDataSet = maxOutWords(mainDataSet, options);
+    mainDataSet = enrichWithReadingType(mainDataSet, level, PATHS.jsonOutputDirectory);
 
-
+    mainDataSet = await replaceReadingTypes(mainDataSet, PATHS.rawDataDirectoryPath);
+    //console.log(mainDataSet);
     
+    await reportMissingReadingTypes(mainDataSet, level, PATHS.jsonOutputDirectory);
 
 
 
 
-
-
-  const fileName = `n${options.level}-kanji-with-vocab.json`;
+    const fileName = `n${options.level}-kanji-with-vocab.json`;
     saveToJson(mainDataSet, fileName, PATHS.jsonOutputDirectory);
     
     console.log(`Pipeline complete! Saved ${mainDataSet.length} items.`);
