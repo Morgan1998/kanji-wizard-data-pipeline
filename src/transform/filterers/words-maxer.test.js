@@ -22,3 +22,14 @@ test('maxOutWords should default to 5 if no options provided', () => {
     
     assert.strictEqual(result[0].associatedWords.length, 5);
 });
+
+test('maxOutWords should not slice a kanjyEntry if max is more than the length of the entry'), () => {
+        const mockDataSet = [{
+        associatedWords: [1, 2, 3, 4, 5, 6, 7, 8]
+    }];
+    
+    const result = maxOutWords(mockDataSet, { maxWords: 10 });
+    
+    assert.strictEqual(result[0].associatedWords.length, 8);
+    assert.deepStrictEqual(result[0].associatedWords, [1, 2, 3, 4, 5, 6, 7, 8]);
+}

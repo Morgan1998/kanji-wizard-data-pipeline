@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { PATHS } from "#config/constants";
 import { SUPPORTED_LEVELS } from "#config/constants";
+import { join } from 'node:path';
 
 import { readRawFile } from "#extract/disk-reader";
 import { parseJsonToObject } from "#parse/json-parser";
@@ -24,6 +25,7 @@ import { sortWordsByFrequency } from "#transform/sorters/words-sorter-by-frequen
 import { maxOutWords } from '#transform/filterers/words-maxer';
 import { enrichWithReadingType } from "#transform/enrichers/words-reading-type-enricher";
 import { replaceReadingTypes } from "#transform/replacers/reading-type-replacer";
+import { enrichKanjiWithSvg } from "#transform/enrichers/kanji-svg-enricher";
 
 import { reportMissingReadingTypes } from "#load/pipeline-reporter";
 
@@ -103,8 +105,13 @@ async function runPipeline() {
     mainDataSet = maxOutWords(mainDataSet, options);
     mainDataSet = enrichWithReadingType(mainDataSet, level, PATHS.jsonOutputDirectory);
 
-    mainDataSet = await replaceReadingTypes(mainDataSet, PATHS.rawDataDirectoryPath);
-    //console.log(mainDataSet);
+    mainDataSet = await replaceReadingTypes(mainDataSet, PATHS.rawDataDirectoryPath, level);
+    
+
+    const svgDataString = await readRawFile(join(PATHS.rawDataDirectoryPath, 'kanjivg-master.json'));
+    
+    const svgDataObject = parseJsonToObject(svgDataString);
+    mainDataSet = enrichKanjiWithSvg(mainDataSet, svgDataObject);
     
     await reportMissingReadingTypes(mainDataSet, level, PATHS.jsonOutputDirectory);
 
