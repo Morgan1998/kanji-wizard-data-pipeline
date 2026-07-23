@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
-import { enrichWithReadingType } from './words-reading-type-enricher.js';
+import { enrichWithTargetKanjiReadingType } from './words-reading-type-enricher.js';
 
-test('enrichWithReadingType should add a reading type property to words of associateWords', () => {
+test('enrichWithTargetKanjiReadingType should add a reading type property to words of associateWords', () => {
 
     const mockDataSet = [{
         "kanji": "高",
@@ -71,7 +71,7 @@ test('enrichWithReadingType should add a reading type property to words of assoc
         ]
     }];
 
-    const result = enrichWithReadingType(mockDataSet);
+    const result = enrichWithTargetKanjiReadingType(mockDataSet);
 
     const updatedWords = result[0].associatedWords;
 

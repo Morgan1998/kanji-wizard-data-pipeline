@@ -32,11 +32,11 @@ export function enrichKanjiWithSvg(mainDataSet, svgDataObject) {
         // Using simple undefined check is the fastest way to verify presence
         if (svgDataObject[key] === undefined) {
             unicodeMismatches++;
-            console.log(`Mismatch found for: ${kanjiEntry.kanji} (Key: ${key})`);
+            console.warn(`[Pipeline] No SVG found in KanjiVG for: ${kanjiEntry.kanji} (Key: ${key})`);
         }
     }
 
-    console.log(`Total mismatches: ${unicodeMismatches}`);
+    console.log(`Total kanji unicode mismatches: ${unicodeMismatches}`);
 
     return mainDataSet.map(kanjiEntry => ({
         ...kanjiEntry,

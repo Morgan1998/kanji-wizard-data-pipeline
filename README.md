@@ -27,46 +27,56 @@ npm install
 * Core datasets will be downloaded upon running `npm install`
 
 
-## Sources & Credits
 
-### 🗃️ Data Sources & Provenance (データソースと帰属)
+## 🗃️ Data Sources & Provenance (データソースと帰属)
 
 This project strictly adheres to the open-source licenses of the following foundational datasets. Data processing pipelines trace back to their primary upstream creators:
 
-#### 1. JLPT Kanji Dataset
-* **Direct Source:** [Renairisu/jlpt_kanji_json_msgpack](https://github.com/Renairisu/jlpt_kanji_json_msgpack) (Kanji lists organized by JLPT level)
-* **Upstream Creator:** [kanjiapi.dev](https://kanjiapi.dev) (Primary Kanji API data source)
-* **License/Terms:** Explicit compliance with the downstream transformation repository's data structure.
-
-#### 2. Japanese-English Dictionary Dataset (JMdict)
+#### 1. Japanese-English Dictionary Dataset (JMdict)
 * **Direct Source:** [scriptin/jmdict-simplified (Release 3.6.2+)](https://github.com/scriptin/jmdict-simplified/releases)
 * **Upstream Creator:** [EDRDG / Jim Breen](http://www.edrdg.org/) (Electronic Dictionary Research and Development Group)
 * **License:** Distributed under the [EDRDG Licence Statement](http://edrdg.org) (Creative Commons Attribution-ShareAlike 3.0 Unported).
 
-#### 3. JLPT Vocabulary Dataset
+#### 2. JLPT Vocabulary Dataset
 * **Direct Source:** [Bluskyo/JLPT_Vocabulary](https://github.com/Bluskyo/JLPT_Vocabulary/releases) (Structured JSON/CSV word lists with JLPT classification)
 * **Upstream Creator:** Jonathan Waller via [Tanos JLPT Word Lists](https://tanos.co.uk)
 * **License:** [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org)
 
-#### 4. Vocabulary Frequency Dataset **For Anki Deck Generation**
+#### 3. Vocabulary Frequency Dataset **For Anki Deck Generation**
 * **Data Source:** [JPDB.io](https://jpdb.io) (Original corpus/frequency data)
 * **Format & Infrastructure:** Maintained by [MarvNC](https://github.com/MarvNC/yomitan-dictionaries) via the Yomitan Dictionaries ecosystem.
 * **Direct Repository:** [Kuuuube / yomitan-dictionaries](https://github.com/Kuuuube/yomitan-dictionaries) (Mirror/Collection)
 * **License/Usage:** Data derived from JPDB.io. This project utilizes the dataset for personal educational and portfolio purposes. Please note that this data is subject to the terms of the original platform and is intended for non-commercial use.
 
+#### 4. Main Kanji Dataset
+* **Data Source:** [davidluzgouveia/kanji-data](https://github.com/davidluzgouveia/kanji-data) (Master kanji dataset with over 13,000 kanji, including core data for each kanji entry)
+* **Upstream Creator:** [EDRDG / Jim Breen](https://www.edrdg.org/) (Electronic Dictionary Research and Development Group)
+* **License:** Distributed under the [EDRDG Licence Statement](http://edrdg.org) (Creative Commons Attribution-ShareAlike 3.0 Unported).
+
+#### 5. JLPT Kanji Dataset
+* **Direct Source:** [Renairisu/jlpt_kanji_json_msgpack](https://github.com/Renairisu/jlpt_kanji_json_msgpack) (Kanji lists organized by JLPT level)
+* **Upstream Creator:** [kanjiapi.dev](https://kanjiapi.dev) (Primary Kanji API data source)
+* **License/Terms:** Explicit compliance with the downstream transformation repository's data structure.
+
+
+
 
 ## 🗺️ Project Roadmap
 
-### Phase 1: Core Performance Optimization
-- [x] **In-Memory Kanji Hashing:** Implemented a JavaScript `Map` structure to achieve `O(1)` instant lookups for Kanji metadata, preventing nested loop slowdowns.
-
-### Phase 2: Setup Core architecture
+### Phase 1: Setup Core architecture
 - [x] **Implement a simple ETL file structure:** Use ETL (Extract, Transform, Load) to organize the core modules of the project.
 - [x] **Utilize Subpath Imports :** Switch from barrel imports to subpath imports to eliminate risk of circular dependency and only execute the exact modules needed for a given operation. 
 - [x] **Refactor to use promise-based APIs :** Make use of promise-based APIs to enforce non-blocking asynchronous execution. 
 
+### Phase 2: Testing
+- [x] **Implement testing:** Write clean unit tests for each module.
+
 ### Phase 3: Interface
 - [x] **Command Line Interface (CLI):** Implement the `Commander` package to allow passing in of process arguments for dynamic dataset creation. 
 
-### Phase 4: Testing
-- [x] **Implement testing:** Write clean tests for each major module.
+### Phase 4: Core Performance Optimization
+- [x] **In-Memory Kanji Hashing:** Implement a JavaScript `Map` structure to achieve `O(1)` instant lookups for Kanji metadata, preventing nested loop slowdowns.
+- [] **Peer review:** Have engineer peers review the pipeline to point out any potential optimizations. 
+
+### Phase 5: Use with the Kanji Wizard project
+- [] **Use it!** Successfully launch a Kanji Wizard deck by using a dataset sourced from this pipeline.

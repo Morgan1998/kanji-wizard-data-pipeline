@@ -1,11 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export async function replaceReadingTypes(mainDataSet, rawDataDirectoryPath, level) {
+export async function replaceReadingTypes(mainDataSet, rawDataDirectoryPath) {
     let overrides = [];
     
     try {
-        const filePath = join(rawDataDirectoryPath, `n${level}-reading-type-overrides.json`);
+        const filePath = join(rawDataDirectoryPath, 'reading-type-overrides', 'reading-type-overrides.json');
         const data = await readFile(filePath, 'utf-8');
         overrides = JSON.parse(data);
     } catch (error) {
@@ -27,7 +27,7 @@ export async function replaceReadingTypes(mainDataSet, rawDataDirectoryPath, lev
                 const patch = overrideMap.get(word.id);
                 return {
                     ...word,
-                    readingType: patch.readingType
+                    targetKanjiReadingType: patch.targetKanjiReadingType
                 };
             }
             return word;

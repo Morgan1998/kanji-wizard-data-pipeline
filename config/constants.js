@@ -5,13 +5,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
 
 export const SOURCES = {
-  kanjiDataSource: 'kanji_jlpt_only.json',
+  kanjiDataSource: 'kanji.json',
   mainDictionarySource: 'jmdict-eng-common-3.6.2.json',
   wordsJlptSource: 'JLPT_vocab_ALL.json',
   wordsFrequencySource: 'term_meta_bank_1.json',
 };
 
 export const PATHS = {
+  kanjiSetDirectoryPath: join(ROOT_DIR, 'data/raw/kanji-sets'),
   rawDataDirectoryPath: join(ROOT_DIR, 'data/raw'),
   kanjiDataSourcePath: join(ROOT_DIR, 'data/raw', SOURCES.kanjiDataSource),
   mainDictionarySourcePath: join(ROOT_DIR, 'data/raw', SOURCES.mainDictionarySource),
