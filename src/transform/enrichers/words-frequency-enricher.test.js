@@ -1,37 +1,60 @@
-import { test } from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert';
 import { enrichWordsWithFrequency } from './words-frequency-enricher.js';
 
-test('enrichWordsWithFrequency should update associatedWords with frequency rank', () => {
-    const mockDataSet = [{
-        id: 1,
-        associatedWords: [
-            { writtenForm: '猫' },
-            { writtenForm: '秘密' }
-        ]
-    }];
+test('enrichWordsWithFrequency should correctly add all three frequency metrics to associated words', () => {
+    const mockDataSet = [
+        {
+            kanji: '日',
+            associatedWords: [
+                { writtenForm: '今日', meaning: 'today' }
+            ]
+        }
+    ];
 
-    const frequencyMap = new Map([
-        ['猫', 105],
-        ['秘密', 200]
-    ]);
+    const spokenMap = new Map([['今日', 1500]]);
+    const tubelexMap = new Map([['今日', 3200]]);
+    const literaryMap = new Map([['今日', 45]]);
 
-    const result = enrichWordsWithFrequency(mockDataSet, frequencyMap);
+    const result = enrichWordsWithFrequency(mockDataSet, spokenMap, tubelexMap, literaryMap);
 
-    const updatedWords = result[0].associatedWords;
-    
-    assert.strictEqual(updatedWords[0].frequency, 105);
-    assert.strictEqual(updatedWords[1].frequency, 200);
+    const enrichedWord = result[0].associatedWords[0];
+    assert.strictEqual(enrichedWord.spokenFrequency, 1500);
+    assert.strictEqual(enrichedWord.tubelexOccurrenceCount, 3200);
+    assert.strictEqual(enrichedWord.literaryFrequency, 45);
 });
 
-test('enrichWordsWithFrequency should assign null if frequency is missing', () => {
-    const mockDataSet = [{
-        associatedWords: [{ writtenForm: '未知' }]
-    }];
+test('enrichWordsWithFrequency should default missing metrics to null', () => {
+    const mockDataSet = [
+        {
+            kanji: '水',
+            associatedWords: [
+                { writtenForm: '未知', meaning: 'unknown' }
+            ]
+        }
+    ];
 
-    const emptyMap = new Map();
+    const spokenMap = new Map();
+    const tubelexMap = new Map();
+    const literaryMap = new Map();
 
-    const result = enrichWordsWithFrequency(mockDataSet, emptyMap);
+    const result = enrichWordsWithFrequency(mockDataSet, spokenMap, tubelexMap, literaryMap);
 
-    assert.strictEqual(result[0].associatedWords[0].frequency, null);
+    const enrichedWord = result[0].associatedWords[0];
+    assert.strictEqual(enrichedWord.spokenFrequency, null);
+    assert.strictEqual(enrichedWord.tubelexOccurrenceCount, null);
+    assert.strictEqual(enrichedWord.literaryFrequency, null);
+});
+
+test('enrichWordsWithFrequency should throw an error if any required argument is missing', () => {
+    const mockDataSet = [];
+    const mockMap = new Map();
+
+    assert.throws(() => {
+        enrichWordsWithFrequency(null, mockMap, mockMap, mockMap);
+    }, /\[Enricher Failure\] Missing data/);
+
+    assert.throws(() => {
+        enrichWordsWithFrequency(mockDataSet, null, mockMap, mockMap);
+    }, /\[Enricher Failure\] Missing data/);
 });

@@ -16,21 +16,30 @@ export async function replaceReadingTypes(mainDataSet, rawDataDirectoryPath) {
     if (overrides.length === 0) {
         console.log('reading-type-overrides.json is empty. No replacing needed! woohoo!');
         return mainDataSet;
-        }
+    }
 
-    const overrideMap = new Map(overrides.map(word => [word.id, word]));
+    // Build a composite map using both the word id and target kanji as the key
+    const overrideMap = new Map(
+        overrides.map(item => [`${item.id}_${item.targetKanji}`, item])
+    );
 
-    return mainDataSet.map(entry => ({
-        ...entry,
-        associatedWords: entry.associatedWords.map(word => {
-            if (overrideMap.has(word.id)) {
-                const patch = overrideMap.get(word.id);
-                return {
-                    ...word,
-                    targetKanjiReadingType: patch.targetKanjiReadingType
-                };
-            }
-            return word;
-        })
-    }));
+    return mainDataSet.map(entry => {
+        const targetKanji = entry.kanji; // Assumes each mainDataSet entry holds the target kanji property
+
+        return {
+            ...entry,
+            associatedWords: entry.associatedWords.map(word => {
+                const compositeKey = `${word.id}_${targetKanji}`;
+                
+                if (overrideMap.has(compositeKey)) {
+                    const patch = overrideMap.get(compositeKey);
+                    return {
+                        ...word,
+                        targetKanjiReadingType: patch.targetKanjiReadingType
+                    };
+                }
+                return word;
+            })
+        };
+    });
 }

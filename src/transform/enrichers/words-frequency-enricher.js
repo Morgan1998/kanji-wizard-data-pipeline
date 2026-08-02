@@ -1,15 +1,19 @@
-export function enrichWordsWithFrequency(mainDataSet, wordsFrequencyMap) {
-  if (!mainDataSet || !wordsFrequencyMap) {
+export function enrichWordsWithFrequency(mainDataSet, spokenFrequenciesMap, tubelexOccurrenceMap, literaryFrequenciesMap) {
+  if (!mainDataSet || !spokenFrequenciesMap || !tubelexOccurrenceMap || !literaryFrequenciesMap) {
     throw new Error('[Enricher Failure] Missing data');
   }
 
   return mainDataSet.map(kanjiEntry => {
     const enrichedWords = kanjiEntry.associatedWords.map(word => {
-      const frequency = wordsFrequencyMap.get(word.writtenForm);
+      const spokenFrequency = spokenFrequenciesMap.get(word.writtenForm);
+      const tubelexOccurrenceCount = tubelexOccurrenceMap.get(word.writtenForm);
+      const literaryFrequency = literaryFrequenciesMap.get(word.writtenForm);
 
       return {
         ...word,
-        frequency: frequency || null
+        spokenFrequency: spokenFrequency || null,
+        tubelexOccurrenceCount: tubelexOccurrenceCount || null,
+        literaryFrequency: literaryFrequency || null
       };
     });
 

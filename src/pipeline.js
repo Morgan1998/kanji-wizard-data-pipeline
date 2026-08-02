@@ -17,25 +17,27 @@ import { enrichWithAssociatedWords } from "#transform/enrichers/kanji-words-enri
 import { buildWordsJlptMap } from "#transform/mappers/words-jlpt-mapper";
 import { enrichWordsWithJlpt } from "#transform/enrichers/words-jlpt-enricher";
 import { buildWordsFrequencyMap } from "#transform/mappers/words-frequency-mapper";
+import { buildTubelexOccurrencesMap } from "#transform/mappers/words-tubelex-occurrence-mapper";
 import { enrichWordsWithFrequency } from "#transform/enrichers/words-frequency-enricher"; 
 
-import { filterWordsWithoutFrequency } from '#transform/filterers/words-without-frequency-filterer';
-import { sortWordsByFrequency } from "#transform/sorters/words-sorter-by-frequency";
+import { sortWordsByPriority } from "#transform/sorters/words-sorter-by-priority";
 import { maxOutWords } from '#transform/filterers/words-maxer';
 import { enrichWithTargetKanjiReadingType } from "#transform/enrichers/words-reading-type-enricher";
 import { replaceReadingTypes } from "#transform/replacers/reading-type-replacer";
 import { enrichKanjiWithSvg } from "#transform/enrichers/kanji-svg-enricher";
+import { enrichKanjiWithSortingGroup } from '#transform/enrichers/kanji-sorting-group-enricher';
 
 import { reportMissingReadingTypes } from "#load/pipeline-reporter";
 
 import { saveToJson } from "#load/json-writer";
+import { buildTsv } from "#load/tsv-writer";
 
 const program = new Command();
 
 program
   .name('kanji-wizard-pipeline')
   .version('1.0.0')
-  .requiredOption('-a, --arrangedBy <learningSource>', 'The learning source that aligns with the kanji list provided (e.g. jlpt n5, rtk, wanikani)')
+  .requiredOption('-a, --sortingGroup <learningSource>', 'The learning source that aligns with the kanji list provided (e.g. jlpt n5, rtk, wanikani)')
   .option('-f, --filename <name>', 'The base kanji list filename located in data/raw/kanji-set', 'kanji-set.txt')
   .option('-m, --maxWords <amount>', 'Max number of example words', (value) => parseInt(value, 10), 5)
   .parse(process.argv); 
@@ -68,16 +70,20 @@ async function runPipeline() {
     const wordsJlptMap = buildWordsJlptMap(wordsJlptObject);
     mainDataSet = enrichWordsWithJlpt(mainDataSet, wordsJlptMap);
     
-
-    const wordsFrequencyString = await readRawFile(PATHS.wordsFrequencySourcePath);
-    const wordsFrequencyObject = parseJsonToObject(wordsFrequencyString);
-    const wordsFrequencyMap = buildWordsFrequencyMap(wordsFrequencyObject);
-    mainDataSet = enrichWordsWithFrequency(mainDataSet, wordsFrequencyMap);
+    const spokenFrequenciesString = await readRawFile(PATHS.spokenFrequenciesSourcePath);
+    const spokenFrequenciesObject = parseJsonToObject(spokenFrequenciesString);
+    const spokenFrequenciesMap = buildWordsFrequencyMap(spokenFrequenciesObject);
+    const tubelexOccurrenceMap = await buildTubelexOccurrencesMap(PATHS.tubelexOccurrencesSourcePath);
+    const literaryFrequenciesString = await readRawFile(PATHS.literaryFrequenciesSourcePath);
+    const literaryFrequenciesObject = parseJsonToObject(literaryFrequenciesString);
+    const literaryFrequenciesMap = buildWordsFrequencyMap(literaryFrequenciesObject);
+    mainDataSet = enrichWordsWithFrequency(mainDataSet, spokenFrequenciesMap, tubelexOccurrenceMap, literaryFrequenciesMap);
     
 
-    mainDataSet = filterWordsWithoutFrequency(mainDataSet);
-    mainDataSet = sortWordsByFrequency(mainDataSet);
+
+    mainDataSet = sortWordsByPriority(mainDataSet);
     mainDataSet = maxOutWords(mainDataSet, options);
+    mainDataSet = enrichKanjiWithSortingGroup(mainDataSet, options.sortingGroup);
     mainDataSet = enrichWithTargetKanjiReadingType(mainDataSet);
     mainDataSet = await replaceReadingTypes(mainDataSet, PATHS.rawDataDirectoryPath);
     await reportMissingReadingTypes(mainDataSet, PATHS.jsonOutputDirectory);
@@ -88,8 +94,10 @@ async function runPipeline() {
     mainDataSet = enrichKanjiWithSvg(mainDataSet, svgDataObject);
     
 
-    const fileName = `${options.arrangedBy}-kanji-wizard-dataset.json`;
-    saveToJson(mainDataSet, fileName, PATHS.jsonOutputDirectory);
+    const jsonFileName = `${options.sortingGroup}-kanji-wizard-dataset.json`;
+    await saveToJson(mainDataSet, jsonFileName, PATHS.jsonOutputDirectory);
+
+    await buildTsv(jsonFileName, PATHS.jsonOutputDirectory, PATHS.tsvOutputDirectory, options.sortingGroup);
     
     console.log(`Pipeline complete! Saved ${mainDataSet.length} items.`);
   } catch (error) {

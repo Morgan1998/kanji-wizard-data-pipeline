@@ -1,17 +1,18 @@
+import { PATHS } from '#config/constants';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 
-export function buildTsv(jsonDataPath, tsvOutputDirectory) {
+export function buildTsv(jsonFileName, jsonOutputDirectory, tsvOutputDirectory, arrangedBy) {
     try {
-        const rawData = readFileSync(jsonDataPath, 'utf8');
-        const kanjiList = JSON.parse(rawData);
+        const jsonPath = join(jsonOutputDirectory, jsonFileName)
+        const rawData = readFileSync(jsonPath, 'utf8');
+        const kanjiData = JSON.parse(rawData);
 
-        const level = kanjiList[0]?.jlpt || 'unknown'; 
-        const filename = `n${level}-kanji-with-vocab.tsv`;
+        const filename = `${arrangedBy}-kanji-wizard.tsv`;
         
-        const tsvRows = kanjiList.map(item => {
-            const jsonBlob = JSON.stringify(item).replace(/\t/g, '    ');
-            return `${item.kanji}\t${jsonBlob}`;
+        const tsvRows = kanjiData.map(kanjiEntry => {
+            const jsonBlob = JSON.stringify(kanjiEntry).replace(/\t/g, '    ');
+            return `${kanjiEntry.kanji}\t${jsonBlob}`;
         });
 
         const outputDir = tsvOutputDirectory;

@@ -19,7 +19,7 @@ export function buildWordsFrequencyMap(wordsFrequencyObject) {
             const metaData = entry [2];
 
             if (metaData && typeof metaData === 'object' && 'frequency' in metaData) {
-                wordsFrequencyMap.set(word, metaData.frequency.value);
+                wordsFrequencyMap.set(word, metaData.frequency.value ? metaData.frequency.value : metaData.frequency);
                 kanjiWords++;
             } else if (metaData && typeof metaData === 'object' && 'value' in metaData) {
                 wordsFrequencyMap.set(word, metaData.value);

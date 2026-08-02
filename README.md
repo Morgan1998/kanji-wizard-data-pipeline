@@ -58,6 +58,18 @@ This project strictly adheres to the open-source licenses of the following found
 * **Upstream Creator:** [kanjiapi.dev](https://kanjiapi.dev) (Primary Kanji API data source)
 * **License/Terms:** Explicit compliance with the downstream transformation repository's data structure.
 
+#### 6. YouTube-based Occurrence Ratings
+
+* **Source:** [naist-nlp/tubelex](https://github.com/naist-nlp/tubelex) — Vocabulary dataset assigning frequency metrics to large samples of vocabulary based on a massive YouTube subtitle corpus.
+
+##### Paper Citation
+If you use or build upon the TUBELEX dataset, please cite the original authors:
+
+> Nohejl, A., Hudi, F., Kardinata, E. A., Ozaki, S., Riera Machin, M. A., Sun, H., Vasselli, J., & Watanabe, T. (2024). Beyond Film Subtitles: Is YouTube the Best Approximation of Spoken Vocabulary? [arXiv:2410.03240 [cs.CL]].
+
+##### License & Usage
+The TUBELEX dataset and its associated code are distributed under the **BSD 3-Clause License**. You can review the full license terms directly in the [TUBELEX Repository](https://github.com/naist-nlp/tubelex/blob/main/LICENSE).
+
 
 
 

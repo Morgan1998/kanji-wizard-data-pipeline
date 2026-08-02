@@ -2,21 +2,24 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const LLM_PROMPT = `Act as a Japanese linguistics expert and data engineer. I will provide a JSON list of Japanese words. For each object/word, update the 'targetKanjiReadingType' property based on these rules:
+const LLM_PROMPT = `Act as an expert Japanese linguist and data engineer. I will provide a JSON payload containing an array of Japanese words that need their target kanji reading types classified. 
 
-1. You will only be concerned with the targetKanji as it appears in the word. You can disregard the readings of the other kanji in the word. 
-2. Rendaku: Add 'rendaku' AND the primary reading type ('on' or 'kun') to the array (e.g., ['rendaku', 'on']).
-3. Onbin: Add 'onbin' AND the primary reading type ('on' or 'kun') to the array (e.g., ['onbin', 'kun']).
-4. Jukujikun: Use exactly ['jukujikun'].
-5. Standard: Use ['on'] or ['kun'].
-6. Ambiguous: If you are uncertain or it fits none of the above, label it 'manual-review'.
+Each object in the array represents a word paired with a specific 'targetKanji'. Your job is to determine how that specific 'targetKanji' functions *within that exact word*.
 
-Output Requirements:
+### Classification Rules:
+1. Standard Readings: Use ['on'] or ['kun'] if the target kanji straightforwardly uses its Sino-Japanese (*on'yomi*) or native (*kun'yomi*) reading.
+2. Sound Shifts: If the reading undergoes a predictable phonetic mutation, combine the primary type with the modifier:
+   - Rendaku (voicing): ['kun', 'rendaku'] or ['on', 'rendaku']
+   - Onbin (sound euphony/contraction): ['kun', 'onbin'] or ['on', 'onbin']
+3. Jukujikun: If the word is an un-segmentable native compound where individual character readings do not map cleanly to the parts, use ['jukujikun'].
+4. Manual Review / Uncertain: If you are uncertain or the reading cannot be reliably attributed to the target kanji, label it ['manual-review'].
+
+### Output Requirements:
 - Return the output as a valid JSON object with two keys: "updated" and "flagged".
-- You must return the entire original object structure, modifying ONLY the 'targetKanjiReadingType' property AND ONLY removing the 'targetKanji' property. 
-- Provide ONLY the raw JSON output. Do not include any conversational filler.
-- If you return an entry as flagged, please give follow up recommendations on what we could mark as the targetKanjiReadingType for the flagged entries. 
-- Return in a codeblock for easy copying`;
+- "updated": An array of the processed word objects with the 'targetKanjiReadingType' property updated according to the rules above.
+- "flagged": An array of any entries you couldn't classify with high confidence, including a short recommended fix in the object if possible.
+- You must preserve the original object structure, including the 'targetKanji' property so the entries remain contextually anchored.
+- Provide ONLY the raw JSON output inside a markdown code block. Do not include any conversational filler or introductory text.`;
 
 export async function reportMissingReadingTypes(mainDataSet, jsonOutputDirectory) {
     const manualReviewList = [];
